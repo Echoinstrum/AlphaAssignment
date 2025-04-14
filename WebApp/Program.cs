@@ -1,3 +1,4 @@
+using Business.MapperProfiles;
 using Data.Contexts;
 using Data.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,8 @@ builder.Services.AddIdentity<UserEntity, IdentityRole>(x =>
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Got help from Chat-GPT4o to set up AutoMapper, for cleaner code and avoiding having to map each property manually
+builder.Services.AddAutoMapper(typeof(ProjectProfile).Assembly);
 
 var app = builder.Build();
 

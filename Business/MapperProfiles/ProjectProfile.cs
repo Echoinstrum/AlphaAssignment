@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+
+
+
+using Business.Dtos;
+using Data.Entities;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Business.MapperProfiles;
+//Got help from Chat-GPT4o to set up AutoMapper, for cleaner code and avoiding having to map each property manually
+public class ProjectProfile : Profile
+{
+    public ProjectProfile()
+    {
+        CreateMap<CreateProjectDto, ProjectEntity>();
+
+        CreateMap<ProjectEntity, ProjectDto>();
+
+        CreateMap<UpdateProjectDto, ProjectEntity>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+    }
+}

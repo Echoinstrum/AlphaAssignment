@@ -1,4 +1,6 @@
 using Business.MapperProfiles;
+using Business.Services.Interfaces;
+using Business.Services;
 using Data.Contexts;
 using Data.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +22,8 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 //Got help from Chat-GPT4o to set up AutoMapper, for cleaner code and avoiding having to map each property manually
 builder.Services.AddAutoMapper(typeof(ProjectProfile).Assembly);
+
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 var app = builder.Build();
 

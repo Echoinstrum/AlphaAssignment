@@ -10,7 +10,7 @@ namespace Business.Services.Interfaces
     public interface IProjectService
     {
         Task<IEnumerable<ProjectDto>> GetAllAsync();
-        Task<ProjectDto> GetByIdAsync(string id);
+        Task<ProjectDto> GetProjectByIdAsync(string id);
         Task<ProjectDto> CreateAsync(CreateProjectDto dto);
         Task<ProjectDto> UpdateAsync(string id, UpdateProjectDto dto);
         Task<bool> DeleteAsync(string id);

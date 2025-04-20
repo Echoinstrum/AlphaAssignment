@@ -30,7 +30,7 @@ namespace Business.Services
         }
 
 
-        public async Task<ProjectDto> GetByIdAsync(string id)
+        public async Task<ProjectDto> GetProjectByIdAsync(string id)
         {
             var project = await _context.Projects.Include(p => p.Client).FirstOrDefaultAsync(p => p.Id == id);
             return project != null ? _mapper.Map<ProjectDto>(project) : null!;

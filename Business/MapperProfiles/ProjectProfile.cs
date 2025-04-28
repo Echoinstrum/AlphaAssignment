@@ -9,6 +9,7 @@ using AutoMapper;
 
 using Business.Dtos;
 using Data.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.MapperProfiles;
@@ -19,7 +20,8 @@ public class ProjectProfile : Profile
     {
         CreateMap<CreateProjectDto, ProjectEntity>();
 
-        CreateMap<ProjectEntity, ProjectDto>();
+        CreateMap<ProjectEntity, ProjectDto>()
+            .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => src.Client.ClientName));
 
         CreateMap<UpdateProjectDto, ProjectEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

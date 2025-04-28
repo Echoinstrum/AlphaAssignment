@@ -48,12 +48,14 @@ namespace Business.Services
         public async Task<ProjectDto> UpdateAsync(string id, UpdateProjectDto dto)
         {
             var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
-            if (project == null) return null!;
-
+            if (project == null)
+            {
+                return null!;
+            }
             _mapper.Map(dto, project);
             _context.Projects.Update(project);
             await _context.SaveChangesAsync();
-            return _mapper.Map<ProjectDto>(dto);
+            return _mapper.Map<ProjectDto>(project);
         }
 
 

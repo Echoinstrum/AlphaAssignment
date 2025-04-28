@@ -21,10 +21,13 @@ builder.Services.AddIdentity<UserEntity, IdentityRole>(x =>
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHttpContextAccessor();
+
 //Got help from Chat-GPT4o to set up AutoMapper, for cleaner code and avoiding having to map each property manually
 builder.Services.AddAutoMapper(typeof(ProjectProfile).Assembly);
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

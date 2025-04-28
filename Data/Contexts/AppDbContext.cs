@@ -26,5 +26,11 @@ public class AppDbContext : IdentityDbContext<UserEntity>
         modelBuilder.Entity<ProjectEntity>()
             .Property(p => p.Budget)
             .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<ClientEntity>().HasData(
+                new ClientEntity { Id = "Client-1", ClientName = "KlågerupPåSinVakt Ab" },
+                new ClientEntity { Id = "Client-2", ClientName = "GaEmJo SI Ab" },
+                new ClientEntity { Id = "Client-3", ClientName = "JLM Test" }
+        );
     }
 }

@@ -4,6 +4,7 @@ using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250425095758_UpdatedProjectEntityRemoveUser")]
+    partial class UpdatedProjectEntityRemoveUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,23 +37,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "Client-1",
-                            ClientName = "KlågerupPåSinVakt Ab"
-                        },
-                        new
-                        {
-                            Id = "Client-2",
-                            ClientName = "GaEmJo SI Ab"
-                        },
-                        new
-                        {
-                            Id = "Client-3",
-                            ClientName = "JLM Test"
-                        });
                 });
 
             modelBuilder.Entity("Data.Entities.ProjectEntity", b =>

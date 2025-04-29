@@ -2,12 +2,11 @@
 
 namespace WebApp.Controllers
 {
-    public class ProjectsController : Controller
+    public class HomeController : Controller
     {
-        [HttpGet("/projects")]
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

@@ -3,8 +3,35 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="screen-center">
+<div class="center-screen">
     <div class="surface">
-        @ViewData["Title"]
+        <form method="post" asp-action="Login" asp-controller="Auth">
+            <header>
+                <h2>Login</h2>
+            </header>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" class="form-control" placeholder="Your email address" required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" class="form-control" placeholder="Enter your password" required />
+            </div>
+
+            <div class="form-group">
+                <div class=" d-flex align-items-center gap-2">
+                    <input type="checkbox" id="rememberMe" class="form-check-input mt-0" />
+                    <label class="form-check-label" for="rememberMe">Remember Me</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-blue w-100">Log In</button>
+            </div>
+            <footer class="text-center">
+                <small>Don't have an account? <a href="@Url.Action("Register", "Auth")">Sign Up</a></small>
+            </footer>
+        </form>
     </div>
 </div>

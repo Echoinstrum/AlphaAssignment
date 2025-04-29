@@ -107,6 +107,8 @@ html, body {
 }
 
 .surface {
+    width: 100%;
+    max-width: 550px;
     padding: 2rem;
     background-color: var(--surface-color);
     box-shadow: 0 6px 6px 2px rgba(160, 160, 160, 0.1);
@@ -288,6 +290,20 @@ h6 {
             background-color: var(--navlink-background-active-color);
         }
 
+.top > div {
+    display: flex;
+    color: var(--body-light-color);
+    justify-content: end;
+    align-items: center;
+    gap: 2rem;
+}
+
+    .top > div > .settings-gear {
+        font-size: 18px;
+        border-right: 1px solid var(--border-300);
+        padding-right: 2rem;
+    }
+
 /* sections */
 
 /* views/pages */
@@ -326,15 +342,23 @@ h6 {
 }
 
 form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
     width: 100%;
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
 
     form header {
+        justify-content: center;
         margin-bottom: 2rem;
+        text-align: center;
     }
 
     form footer {
-        margin-top: 2rem;
+        margin-top: 6rem;
+        text-align: center;
     }
 
     form .image-preview-container {
@@ -353,12 +377,12 @@ form {
         align-items: center;
     }
 
-    form .form-group {
+    /* form .form-group {
         position: relative;
         display: grid;
         gap: 0.2rem;
         margin-bottom: 1.2rem;
-    }
+    } */
 
     form label {
         font-size: 0.9em;
@@ -368,7 +392,6 @@ form {
     form input,
     form select {
         width: 100%;
-        padding: 0.5rem 1rem;
         border-radius: 16px;
         border: 1px solid var(--border-200);
         outline: none;

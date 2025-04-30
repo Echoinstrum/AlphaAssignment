@@ -2,4 +2,61 @@
     Layout = "_PortalLayout";
     ViewData["Title"] = "Projects";
 }
-<h1>Welcome to Projects</h1>
+
+<section class="projects-header mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h2 class="mb-1">Projects</h2>
+        <div class="tabs d-flex gap-4">
+            <a href="#" class="tab-link active">All []</a>
+            <a href="#" class="tab-link">Started []</a>
+            <a href="#" class="tab-link">Completed []</a>
+        </div>
+    </div>
+    <button class="btn btn-blue">+ Add Project</button>
+</section>
+
+<section id="projectsContainer" class="d-flex flex-wrap gap-4">
+    <!-- JS fyller korten här -->
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const container = document.getElementById("projectsContainer");
+
+            try {
+                const response = await fetch("/api/projects");
+                if (!response.ok) throw new Error("Failed to load projects");
+
+                const projects = await response.json();
+                if (projects.length === 0) {
+                    container.innerHTML = "<p>No projects found.</p>";
+                    return;
+                }
+
+                for (const project of projects) {
+                    const card = document.createElement("div");
+                    card.className = "project-card";
+
+                    card.innerHTML = `
+                        <div class="project-card-top">
+                            <img src="/images/project-icon.svg" alt="Project Icon" class="project-image" />
+                            <div class="project-card-title">
+                                <h6>${project.projectName}</h5>
+                                <span class="client-name">${project.clientName}</span>
+                            </div>
+                            <span>
+                                <i class="fa-solid fa-ellipsis project-icon"></i>
+                            </span>
+                        </div>
+                        <p class="description">${project.description}</p>
+                    `;
+
+                    container.appendChild(card);
+                }
+            } catch (err) {
+                container.innerHTML = `<div class="text-danger">Error: ${err.message}</div>`;
+            }
+        });
+    </script>
+}

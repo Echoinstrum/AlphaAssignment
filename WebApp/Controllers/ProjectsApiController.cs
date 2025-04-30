@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/projects")]
 //[Authorize]
-public class ProjectsApiController : Controller
+public class ProjectsApiController : ControllerBase
 {
 
     private readonly IProjectService _projectService;

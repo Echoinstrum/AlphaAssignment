@@ -21,7 +21,7 @@ public class ProjectProfile : Profile
         CreateMap<CreateProjectDto, ProjectEntity>();
 
         CreateMap<ProjectEntity, ProjectDto>()
-            .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => src.Client.ClientName));
+            .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => src.Client != null ? src.Client.ClientName : ""));
 
         CreateMap<UpdateProjectDto, ProjectEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

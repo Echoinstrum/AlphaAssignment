@@ -18,12 +18,14 @@ public class ProjectProfile : Profile
 {
     public ProjectProfile()
     {
-        CreateMap<CreateProjectDto, ProjectEntity>();
 
-        CreateMap<ProjectEntity, ProjectDto>()
-            .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => src.Client != null ? src.Client.ClientName : ""));
+        CreateMap<CreateProjectDto, ProjectEntity>()
+            .ForMember(dest => dest.ClientId, opt => opt.Ignore());
 
         CreateMap<UpdateProjectDto, ProjectEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        CreateMap<ProjectEntity, ProjectDto>()
+            .ForMember(dest => dest.ClientName, opt => opt.MapFrom(src => src.Client.ClientName));
     }
 }

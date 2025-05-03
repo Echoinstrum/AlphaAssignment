@@ -499,3 +499,19 @@ form {
 .description {
     font-size: 0.9rem;
 }
+
+
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+    .modal.show {
+        display: flex;
+    }

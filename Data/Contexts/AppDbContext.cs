@@ -27,10 +27,11 @@ public class AppDbContext : IdentityDbContext<UserEntity>
             .Property(p => p.Budget)
             .HasColumnType("decimal(18,2)");
 
-        modelBuilder.Entity<ClientEntity>().HasData(
-                new ClientEntity { Id = "Client-1", ClientName = "KlågerupPåSinVakt Ab" },
-                new ClientEntity { Id = "Client-2", ClientName = "GaEmJo SI Ab" },
-                new ClientEntity { Id = "Client-3", ClientName = "JLM Test" }
-        );
+        //Chat-GPT4o helped me with seeding a few clients so i could test create projects before i had the functions of creating clients done in the project stage. 
+        //modelBuilder.Entity<ClientEntity>().HasData(
+        //        new ClientEntity { Id = "Client-1", ClientName = "KlågerupPåSinVakt Ab" },
+        //        new ClientEntity { Id = "Client-2", ClientName = "GaEmJo SI Ab" },
+        //        new ClientEntity { Id = "Client-3", ClientName = "JLM Test" }
+        //);
     }
 }

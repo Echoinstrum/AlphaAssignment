@@ -14,5 +14,6 @@ public class CreateProjectDto
     public DateTime StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public decimal Budget { get; set; }
-    public string ClientId { get; set; }
+
+    public string ClientName { get; set; } = null!;
 }

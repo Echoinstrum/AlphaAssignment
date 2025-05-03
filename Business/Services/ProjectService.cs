@@ -39,9 +39,28 @@ namespace Business.Services
         
         public async Task<ProjectDto> CreateAsync(CreateProjectDto dto)
         {
+            Console.WriteLine("🔧 CreateAsync called with DTO:");
+            Console.WriteLine($"Name: {dto.ProjectName}, Client: {dto.ClientName}");
+            var existingClient = await _context.Clients
+                .FirstOrDefaultAsync(c => c.ClientName.ToLower().Trim() == dto.ClientName.ToLower().Trim());
+
+            if(existingClient == null)
+            {
+                existingClient = new ClientEntity
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ClientName = dto.ClientName
+                };
+                _context.Clients.Add(existingClient);
+                await _context.SaveChangesAsync();
+            }
+
             var project = _mapper.Map<ProjectEntity>(dto);
+            project.ClientId = existingClient.Id;
+
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
+
             return _mapper.Map<ProjectDto>(project);
         }
 

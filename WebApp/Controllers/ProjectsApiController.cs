@@ -39,6 +39,8 @@ public class ProjectsApiController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProjectDto dto)
     {
+        Console.WriteLine("🔧 CreateAsync called with DTO:");
+        Console.WriteLine($"Name: {dto.ProjectName}, Client: {dto.ClientName}");
         var createdProject = await _projectService.CreateAsync(dto);
         return CreatedAtAction(
             nameof(GetProjectById), 

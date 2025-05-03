@@ -7,56 +7,287 @@
     <div>
         <h2 class="mb-1">Projects</h2>
         <div class="tabs d-flex gap-4">
-            <a href="#" class="tab-link active">All []</a>
-            <a href="#" class="tab-link">Started []</a>
-            <a href="#" class="tab-link">Completed []</a>
+            <a href="#" class="tab-link active" data-status="all">All []</a>
+            <a href="#" class="tab-link" data-status="Started">Started []</a>
+            <a href="#" class="tab-link" data-status="Completed">Completed []</a>
         </div>
     </div>
-    <button class="btn btn-blue">+ Add Project</button>
+    <button id="openAddProjectBtn" class="btn btn-blue">+ Add Project</button>
 </section>
 
 <section id="projectsContainer" class="d-flex flex-wrap gap-4">
     <!-- JS fyller korten här -->
 </section>
+<div id="addProjectModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content surface">
+            <div class="modal-header d-flex justify-content-between align-items-center mb-3">
+                <h5 class="modal-title">Add Project</h5>
+                <button type="button" class="btn-close" id="closeModalBtn"></button>
+            </div>
 
+            <form id="addProjectForm" onsubmit="handleFormSubmit(event)">
+                <div class="text-center mb-3">
+                    <img src="/images/project-icon.svg" alt="Project Icon" class="project-icon" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Project Name</label>
+                    <input type="text" name="projectName" class="form-control" required />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Client Name</label>
+                    <input type="text" name="clientName" class="form-control" required />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" required></textarea>
+                </div>
+                <div class="d-flex gap-2 mb-2">
+                    <div class="flex-fill">
+                        <label>Start Date</label>
+                        <input type="date" name="startDate" class="form-control" required />
+                    </div>
+                    <div class="flex-fill">
+                        <label>End Date</label>
+                        <input type="date" name="endDate" class="form-control" required />
+                    </div>
+                </div>
+                <div class="form-group mb-4">
+                    <label>Budget</label>
+                    <input type="number" name="budget" class="form-control" required />
+                </div>
+
+                <button type="submit" class="btn btn-blue w-100">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="editProjectModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content surface">
+            <div class="modal-header d-flex justify-content-between align-items-center mb-3">
+                <h5 class="modal-title">Edit Project</h5>
+                <button type="button" class="btn-close" onclick="closeEditModal()"></button>
+            </div>
+
+            <form id="editProjectForm">
+                <input type="hidden" name="id" />
+
+                <div class="text-center mb-3">
+                    <img src="/images/project-icon.svg" alt="Project Icon" class="project-icon" />
+                </div>
+
+                <div class="form-group mb-2">
+                    <label>Project Name</label>
+                    <input type="text" name="projectName" class="form-control" required />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Client Name</label>
+                    <input type="text" name="clientName" class="form-control" required />
+                </div>
+                <div class="form-group mb-2">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" required></textarea>
+                </div>
+                <div class="d-flex gap-2 mb-2">
+                    <div class="flex-fill">
+                        <label>Start Date</label>
+                        <input type="date" name="startDate" class="form-control" required />
+                    </div>
+                    <div class="flex-fill">
+                        <label>End Date</label>
+                        <input type="date" name="endDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group mb-2">
+                    <label>Budget</label>
+                    <input type="number" name="budget" class="form-control" required />
+                </div>
+                <div class="form-group mb-4">
+                    <label>Status</label>
+                    <select name="status" class="form-control" required>
+                        <option value="Started">Started</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-blue w-100">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script>
+        let allProjects = [];
+
+        function toggleDropdown(icon) {
+            const menu = icon.nextElementSibling;
+            const isVisible = menu.style.display === "block";
+            document.querySelectorAll(".dropdown-menu").forEach(m => m.style.display = "none");
+            if (!isVisible) menu.style.display = "block";
+        }
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.matches(".project-icon")) {
+                document.querySelectorAll(".dropdown-menu").forEach(menu => {
+                    menu.style.display = "none";
+                });
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", async () => {
             const container = document.getElementById("projectsContainer");
+            const modal = document.getElementById("addProjectModal");
+            const openBtn = document.getElementById("openAddProjectBtn");
+            const closeBtn = document.getElementById("closeModalBtn");
+            const form = document.getElementById("addProjectForm");
+
+            if (openBtn && modal && closeBtn) {
+                openBtn.addEventListener("click", () => modal.classList.add("show"));
+                closeBtn.addEventListener("click", () => modal.classList.remove("show"));
+            }
+
+            if (form) {
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        const res = await fetch("/api/projects", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data)
+                        });
+
+                        if (res.ok) location.reload();
+                        else alert("Failed to add project");
+                    } catch (err) {
+                        console.error("Unexpected error:", err);
+                        alert("Unexpected error");
+                    }
+                });
+            }
 
             try {
                 const response = await fetch("/api/projects");
                 if (!response.ok) throw new Error("Failed to load projects");
 
                 const projects = await response.json();
-                if (projects.length === 0) {
-                    container.innerHTML = "<p>No projects found.</p>";
-                    return;
-                }
+                allProjects = projects;
 
-                for (const project of projects) {
-                    const card = document.createElement("div");
-                    card.className = "project-card";
-
-                    card.innerHTML = `
-                        <div class="project-card-top">
-                            <img src="/images/project-icon.svg" alt="Project Icon" class="project-image" />
-                            <div class="project-card-title">
-                                <h6>${project.projectName}</h5>
-                                <span class="client-name">${project.clientName}</span>
-                            </div>
-                            <span>
-                                <i class="fa-solid fa-ellipsis project-icon"></i>
-                            </span>
-                        </div>
-                        <p class="description">${project.description}</p>
-                    `;
-
-                    container.appendChild(card);
-                }
+                renderProjects(allProjects);
+                updateTabCounts(allProjects);
             } catch (err) {
                 container.innerHTML = `<div class="text-danger">Error: ${err.message}</div>`;
+            }
+
+            document.querySelectorAll(".tab-link").forEach(tab => {
+                tab.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll(".tab-link").forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+
+                    const status = tab.dataset.status;
+                    if (status === "all") {
+                        renderProjects(allProjects);
+                    } else {
+                        const filtered = allProjects.filter(p => p.status === status);
+                        renderProjects(filtered);
+                    }
+                });
+            });
+        });
+
+        function renderProjects(projects) {
+            const container = document.getElementById("projectsContainer");
+            container.innerHTML = "";
+
+            for (const project of projects) {
+                const card = document.createElement("div");
+                card.className = "project-card";
+
+                card.innerHTML = `
+                    <div class="project-card-top">
+                        <img src="/images/project-icon.svg" alt="Project Icon" class="project-image" />
+                        <div class="project-card-title">
+                            <h6>${project.projectName}</h6>
+                            <span class="client-name">${project.clientName}</span>
+                        </div>
+                        <div class="dropdown position-relative">
+                            <i class="fa-solid fa-ellipsis project-icon" onclick="toggleDropdown(this)"></i>
+                            <div class="dropdown-menu" style="display:none; position:absolute; right:0; top:100%; background:white; border:1px solid #ccc; border-radius:8px; z-index:10;">
+                                <button class="dropdown-item btn btn-link text-start w-100" onclick='openEditModal(${JSON.stringify(project)})'>Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="description">${project.description}</p>
+                `;
+
+                container.appendChild(card);
+            }
+        }
+
+        function updateTabCounts(projects) {
+            const allCount = projects.length;
+            const startedCount = projects.filter(p => p.status === "Started").length;
+            const completedCount = projects.filter(p => p.status === "Completed").length;
+
+            document.querySelector('.tab-link[data-status="all"]').textContent = `All [${allCount}]`;
+            document.querySelector('.tab-link[data-status="Started"]').textContent = `Started [${startedCount}]`;
+            document.querySelector('.tab-link[data-status="Completed"]').textContent = `Completed [${completedCount}]`;
+        }
+
+        function closeEditModal() {
+            document.getElementById("editProjectModal").classList.remove("show");
+        }
+
+        function openEditModal(project) {
+            const modal = document.getElementById("editProjectModal");
+            const form = document.getElementById("editProjectForm");
+
+            form.elements["id"].value = project.id;
+            form.elements["projectName"].value = project.projectName;
+            form.elements["clientName"].value = project.clientName;
+            form.elements["description"].value = project.description;
+            form.elements["startDate"].value = project.startDate.split("T")[0];
+            form.elements["endDate"].value = project.endDate?.split("T")[0] || "";
+            form.elements["budget"].value = project.budget;
+            form.elements["status"].value = project.status;
+
+            modal.classList.add("show");
+        }
+
+        document.getElementById("editProjectForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const id = form.elements["id"].value;
+
+            const data = {
+                projectName: form.elements["projectName"].value,
+                clientName: form.elements["clientName"].value,
+                description: form.elements["description"].value,
+                startDate: form.elements["startDate"].value,
+                endDate: form.elements["endDate"].value,
+                budget: parseFloat(form.elements["budget"].value),
+                status: form.elements["status"].value
+            };
+
+            try {
+                const res = await fetch(`/api/projects/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) location.reload();
+                else alert("Failed to update project");
+            } catch (err) {
+                console.error("Unexpected error:", err);
+                alert("Unexpected error");
             }
         });
     </script>
 }
+

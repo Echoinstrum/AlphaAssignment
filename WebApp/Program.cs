@@ -26,6 +26,11 @@ builder.Services.AddHttpContextAccessor();
 //Got help from Chat-GPT4o to set up AutoMapper, for cleaner code and avoiding having to map each property manually
 builder.Services.AddAutoMapper(typeof(ProjectProfile).Assembly);
 
+builder.Services.AddControllers().AddJsonOptions(opts =>
+{
+    opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
+
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -53,6 +58,7 @@ app.UseHsts();
 app.UseHttpsRedirection();
 app.UseSession();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapStaticAssets();
 app.MapControllerRoute(

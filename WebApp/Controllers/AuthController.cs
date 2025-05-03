@@ -1,5 +1,7 @@
 ﻿using Business.Dtos;
 using Business.Services.Interfaces;
+using Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -8,10 +10,12 @@ namespace WebApp.Controllers
     public class AuthController : Controller
     {
         private readonly IUserService _userService;
+        private readonly SignInManager<UserEntity> _signInManager;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, SignInManager<UserEntity> signInManager)
         {
             _userService = userService;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -67,6 +71,15 @@ namespace WebApp.Controllers
 
             ViewData["ErrorMessage"] = "Registration failed. Please check the details";
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

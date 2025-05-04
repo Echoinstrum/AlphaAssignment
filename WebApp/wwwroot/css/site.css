@@ -151,7 +151,7 @@ footer {
         border-bottom: 1px solid var(--border-300);
         padding: 1rem 2rem;
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr;
         gap: 7rem;
         align-items: center;
     }
@@ -304,6 +304,13 @@ h6 {
         padding-right: 2rem;
     }
 
+.topbar-end {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 1.5rem;
+}
+
 /* sections */
 
 /* views/pages */
@@ -346,8 +353,9 @@ form {
     flex-direction: column;
     gap: 1.5rem;
     width: 100%;
-    padding-left: 4rem;
-    padding-right: 4rem;
+    max-width: 550px;
+/*    padding-left: 4rem;
+    padding-right: 4rem;*/
 }
 
     form header {
@@ -491,6 +499,7 @@ form {
     /*background-color: var(--body-light-color);*/
 }
 
+
 .client-name {
     font-size: 0.9rem;
     color: var(--body-light-color);
@@ -515,3 +524,83 @@ form {
     .modal.show {
         display: flex;
     }
+
+    .modal-header {
+        border-bottom: none;
+    }
+
+    .modal-project-icon{
+        width: 150px;
+        height: 150px;
+    }
+
+    .modal-dialog {
+        width: 100%; /* eller ett värde du tycker känns mer likt */
+    }
+
+    .modal-content {
+        border-radius: 24px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    }
+
+
+.custom-dropdown {
+    position: relative;
+}
+
+.gear-button {
+    background: none;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-right: 1px solid var(--border-200);
+    cursor: pointer;
+    font-size: 20px;
+    padding-right: 1.5rem;
+    color: var(--body-light-color);
+}
+
+.custom-dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: var(--white-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 29px rgba(0,0,0,0.1);
+    padding: 0.5rem 0.5rem;
+    display: none;
+    min-width: 220px;
+    max-width: 320px;
+    width: max-content;
+    z-index: 1000;
+}
+
+.custom-dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-user-info {
+    display: flex;
+    background-color: var(--grey-100);
+    padding: 0.5rem 1rem 0.5rem 0.6rem;
+    border-radius: 14px;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.logout-form {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: var(--red-color);
+    font-weight: var(--font-medium);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}

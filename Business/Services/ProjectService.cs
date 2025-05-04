@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
+    //Got some help from ChatGPT4o whit the mapper parts here. to simplify mapping between the DTOs and Entities.
+    //Automapper is simply used to reduce the manual mapping code. Thiis makes it alot cleaner. 
+    //I did not use this in the database course project, and now i see the big differences on using or not using mapper.
     public class ProjectService : IProjectService
     {
         private readonly AppDbContext _context;
@@ -39,8 +42,6 @@ namespace Business.Services
         
         public async Task<ProjectDto> CreateAsync(CreateProjectDto dto)
         {
-            Console.WriteLine("🔧 CreateAsync called with DTO:");
-            Console.WriteLine($"Name: {dto.ProjectName}, Client: {dto.ClientName}");
             var existingClient = await _context.Clients
                 .FirstOrDefaultAsync(c => c.ClientName.ToLower().Trim() == dto.ClientName.ToLower().Trim());
 

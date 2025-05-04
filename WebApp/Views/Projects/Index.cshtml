@@ -28,7 +28,7 @@
 
             <form id="addProjectForm" onsubmit="handleFormSubmit(event)">
                 <div class="text-center mb-3">
-                    <img src="/images/project-icon.svg" alt="Project Icon" class="project-icon" />
+                    <img src="/images/project-icon.svg" alt="Project Icon" class="modal-project-icon" />
                 </div>
 
                 <div class="form-group mb-2">
@@ -75,7 +75,7 @@
                 <input type="hidden" name="id" />
 
                 <div class="text-center mb-3">
-                    <img src="/images/project-icon.svg" alt="Project Icon" class="project-icon" />
+                    <img src="/images/project-icon.svg" alt="Project Icon" class="modal-project-icon" />
                 </div>
 
                 <div class="form-group mb-2">
@@ -119,6 +119,9 @@
 </div>
 @section Scripts {
     <script>
+        //Got help from ChatGPT4o addEventListener little on and off on this one. Mostly showing and not showing the modals
+        //Since i couldn't quite figure out why it wasn't working. Mostly it was my brain not being friend with bootstrap.container
+        //But also got help from ChatGPT4o on the vanillaJS part, appending some elements and so on. Mostly so that i could get the structure correct
         let allProjects = [];
 
         function toggleDropdown(icon) {
@@ -151,6 +154,32 @@
             if (form) {
                 form.addEventListener("submit", async (e) => {
                     e.preventDefault();
+
+                    const projectName = form.elements["projectName"].value.trim();
+                    const clientName = form.elements["clientName"].value.trim();
+                    const description = form.elements["description"].value.trim();
+                    const startDate = form.elements["startDate"].value;
+                    const endDate = form.elements["endDate"].value;
+                    const budget = form.elements["budget"].value;
+
+                    if (!projectName || !clientName || !description || !startDate || !endDate || !budget) {
+                        alert("Please fill in all fields.");
+                        return;
+                    }
+
+                    if (isNaN(parseFloat(budget)) || parseFloat(budget) <= 0) {
+                        alert("Budget must be a positive number.");
+                        return;
+                    }
+
+                    const start = new Date(startDate); 
+                    const end = new Date(endDate);
+
+                    if (end < start) {
+                        alert("End date must be after start date.");
+                        return;
+                    }
+
                     const formData = new FormData(form);
                     const data = Object.fromEntries(formData.entries());
 
@@ -228,15 +257,16 @@
                 container.appendChild(card);
             }
         }
-
+        //Got help from ChatGPT4o with updating the project counts dependting on it's status.
+        //Filtering on if p.status equals Started or Completed
         function updateTabCounts(projects) {
             const allCount = projects.length;
             const startedCount = projects.filter(p => p.status === "Started").length;
             const completedCount = projects.filter(p => p.status === "Completed").length;
 
-            document.querySelector('.tab-link[data-status="all"]').textContent = `All [${allCount}]`;
-            document.querySelector('.tab-link[data-status="Started"]').textContent = `Started [${startedCount}]`;
-            document.querySelector('.tab-link[data-status="Completed"]').textContent = `Completed [${completedCount}]`;
+            document.querySelector('.tab-link[data-status="all"]').textContent = `ALL [${allCount}]`;
+            document.querySelector('.tab-link[data-status="Started"]').textContent = `STARTED [${startedCount}]`;
+            document.querySelector('.tab-link[data-status="Completed"]').textContent = `COMPLETED [${completedCount}]`;
         }
 
         function closeEditModal() {
@@ -261,7 +291,32 @@
 
         document.getElementById("editProjectForm").addEventListener("submit", async (e) => {
             e.preventDefault();
+
             const form = e.target;
+            const projectName = form.elements["projectName"].value.trim();
+            const clientName = form.elements["clientName"].value.trim();
+            const description = form.elements["description"].value.trim();
+            const startDate = form.elements["startDate"].value;
+            const budget = form.elements["budget"].value;
+
+            if (!projectName || !clientName || !description || !startDate || !budget) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            if (isNaN(parseFloat(budget)) || parseFloat(budget) <= 0) {
+                alert("Budget must be a positive number.");
+                return;
+            }
+
+            const start = new Date(startDate);
+            const end = new Date(form.elements["endDate"].value);
+
+            if (end < start) {
+                alert("End date must be after start date.");
+                return;
+            }
+
             const id = form.elements["id"].value;
 
             const data = {

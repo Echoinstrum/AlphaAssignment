@@ -10,7 +10,7 @@ namespace Business.Services.Interfaces;
 public interface IUserService
 {
     Task<bool> RegisterAsync(RegisterUserDto dto);
-    Task<string> LoginAsync(LoginUserDto dto);
+    Task<bool> LoginAsync(LoginUserDto dto);
 
     string? GetCurrentUserId();
 }

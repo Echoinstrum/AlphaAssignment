@@ -27,19 +27,10 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var loginDto = new LoginUserDto
-            {
-                Email = email,
-                Password = password
-            };
+            var success = await _userService.LoginAsync(new LoginUserDto { Email = email, Password = password });
 
-            var userId = await _userService.LoginAsync(loginDto);
-
-            if (userId != null)
-            {
-                HttpContext.Session.SetString("UserId", userId);
+            if (success)
                 return RedirectToAction("Index", "Projects");
-            }
 
             ViewData["ErrorMessage"] = "Invalid email or password";
             return View();
@@ -73,6 +64,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        //Got help from ChatGPT4o with the Logout function. Wasn't quite sure how to end a session correctly. 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()

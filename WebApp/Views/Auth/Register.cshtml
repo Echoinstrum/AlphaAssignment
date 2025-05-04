@@ -47,3 +47,32 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+
+            if (!fullName || !email || !password || !confirmPassword || !terms) {
+                alert('Please fill in all fields and accept terms.');
+                e.preventDefault();
+                return;
+            }
+
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters.');
+                e.preventDefault();
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+}

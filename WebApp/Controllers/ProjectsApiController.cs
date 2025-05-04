@@ -7,7 +7,9 @@ namespace WebApp.Controllers;
 
 [ApiController]
 [Route("api/projects")]
-//[Authorize]
+
+//Mostly used similar code from earlier project in the Database course. But did get help from ChatGPT4o on minor changes fitting this project.
+//
 public class ProjectsApiController : ControllerBase
 {
 
@@ -39,8 +41,6 @@ public class ProjectsApiController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProjectDto dto)
     {
-        Console.WriteLine("🔧 CreateAsync called with DTO:");
-        Console.WriteLine($"Name: {dto.ProjectName}, Client: {dto.ClientName}");
         var createdProject = await _projectService.CreateAsync(dto);
         return CreatedAtAction(
             nameof(GetProjectById), 

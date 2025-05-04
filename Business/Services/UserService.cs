@@ -1,6 +1,7 @@
 ﻿using Business.Dtos;
 using Business.Services.Interfaces;
 using Data.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -42,16 +43,34 @@ public class UserService : IUserService
         var result = await _userManager.CreateAsync(user, dto.Password);
         return result.Succeeded;
     }
-
-    public async Task<string?> LoginAsync(LoginUserDto dto)
+    //Got help from ChatGPT4o here,  Since i didn't know how i should get access to showing the logged in users "Fullname" in the view.
+    //Instead of using the the SignInManager.PasswordSignInAsync( that signs in using the default flaims), this build a custom ClaimsIdentity
+    //manually and uses HttpContext.SignInAsync. And trough that, getting more control over what claims that are included, and in my case, the FullName which i wanted to show in the settings-gear.
+    public async Task<bool> LoginAsync(LoginUserDto dto)
     {
-        var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, false, false);
-        if (result.Succeeded)
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+        if(user == null)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-            return user?.Id;
+            return false;
         }
-        return null;
+
+        var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+        if(!result.Succeeded)
+        {
+            return false;
+        }
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim("FullName", user.FullName ?? user.Email)
+        };
+
+        var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+        var principal = new ClaimsPrincipal(identity);
+        await _httpContextAccessor.HttpContext!.SignInAsync(IdentityConstants.ApplicationScheme, principal);
+        return true;
     }
 
     public string? GetCurrentUserId()
